@@ -1,0 +1,22 @@
+#pvt_results_container {
+    margin-top: 30px;
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#cardiff_logo
+{
+    width:80px;
+    float:right;
+}
+#PVT_setup_submit
+{
+    margin-top:20px;
+}

@@ -1,0 +1,226 @@
+
+
+
+body{
+    background-color:black;
+    height:100%;
+    padding:0px;
+}
+.body-content
+{
+    height:100%;
+    
+	/*vertical-align:top;*/
+        width:100%;
+	
+}
+
+.vertical_centre
+{
+/*position: relative;
+top: 50%;*/
+
+}
+.navbar 
+{
+    display:none;
+}
+footer
+{
+    display:none;
+}
+
+.task_container
+{
+    padding:20px;
+  
+    display:block;
+	width:100%;
+	height:95vh;
+	/*border:solid 1px white;*/
+	margin-left:auto;
+	margin-right: auto;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.PVT_window{
+    /*position:page;
+
+    top:0px;*/
+    	display:block;
+    /*vertical-align:top;*/
+	width:400px;
+
+
+	margin-left:auto;
+	margin-right: auto;
+		background-color: black;
+		
+
+        position: absolute;
+top: 50%;
+-moz-transform: translate(-50%, -50%);
+ -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+     transform: translate(-50%, -50%);
+left: 50%;
+}
+
+
+.PVT_display
+{	
+	display: block;
+
+	margin-left:auto;
+	margin-right: auto;
+	text-align: center;
+    font-size:36pt;
+    /*margin-top:50%;*/
+    /*height:300px;*/
+
+}
+
+
+#PVT_Start_Container
+{
+	width:100%;
+
+
+}
+
+#PVT_start_button
+{
+	margin-top: 100px;
+	width:100px;
+	height:50px !important;
+	margin-left:auto;
+	margin-right: auto;
+	display:block !important;
+	
+}
+
+#PVT_Start_Msg
+{
+	color:white;
+    font-size:14px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+#PVT_Cross
+{	
+	display: none;
+	color:red;
+}
+
+#PVT_Dot
+{	
+	display: none;
+	color:red;
+}
+
+.red_circle
+{
+display:block;
+margin-left:auto;
+margin-right:auto;
+width:50px;
+
+}
+
+#PVT_Timer
+{	
+	display: none;
+	color:yellow;
+}
+
+#PVT_Results_Container
+{
+	width:60%;
+	margin-left: auto;
+	margin-right: auto;
+    display:none;
+    padding: 20px;
+	color: yellow;
+	  font-size:14px;
+    font-family: 'Open Sans', sans-serif;
+
+}
+
+#PVT_average_text
+{
+	width:100%;
+	text-align: center;
+	display: inline-block;
+	font-size: 24pt;
+	text-align: center;
+}
+
+#PVT_average_time
+{
+	width: 100%;
+	display: inline-block;
+	font-size: 24pt;
+	text-align: center;
+	margin-top: 40px;
+}
+
+#PVT_Early_Text
+{
+	color:red;
+	font-size: larger;
+
+}
+
+#PVT_Early_Msg
+{
+	display:none;
+	width:90%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+#PVT_quit_button
+{
+	margin-top:50px;
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	width:200px;
+	height:50px;
+	font-weight: bold;
+	font-size:14pt;
+	border-color: white;
+	border-width:3px;
+	border-style:solid;
+	color:white;
+	background-color: green;
+}
+
+#PVT_quit_button:hover
+{
+	border-color: orange;
+	cursor: pointer; 
+	cursor: hand;
+}
+
+
+@media screen and (max-width: 500px) {
+    .PVT_window
+    {
+      width:98%;
+    }
+
+    #PVT_Early_Text
+    {
+    	font-size:100%;
+    }
+
+    #PVT_average_text
+    {
+    	font-size:100%;
+    }
+
+}
