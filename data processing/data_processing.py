@@ -136,7 +136,7 @@ def choose_session(total_records,session_keys,session_dict,f_name):
 		
 #Choose Output Function:		
 def generate_outputs(session_name,data_list,f_name):
-	output_types = ["5 minute intervals(max 25 minutes)","1 Minute intervals up to 10 minutes","5 minute intervals, slowst and fastest 10%"]
+	output_types = ["5 minute intervals(max 25 minutes)","1 Minute intervals up to 10 minutes","5 minute intervals, slowst and fastest 10%","Number of Lapses: 1 Minute intervals up to 10 minutes"]
 
 
 	#print(data_list)		
@@ -179,6 +179,9 @@ def generate_outputs(session_name,data_list,f_name):
 
 					elif(format_index == 2):
 						output_percentage_5min_intervals(session_name,data_list,f_name)
+
+					elif(format_index == 3):
+						output_lapses_1min_intervals(session_name,data_list,f_name)
 
 					else:
 						need_input = True
@@ -283,6 +286,7 @@ def output_1min_intervals(session_name,records,f_name):
 
 	print("Output saved as "+output_filename)
 
+
 def output_percentage_5min_intervals(session_name,records,f_name):
 	output_filename = session_name+"_percentages.csv"
 
@@ -305,6 +309,33 @@ def output_percentage_5min_intervals(session_name,records,f_name):
 
 	print("Output saved as "+output_filename)
 
+
+def output_lapses_1min_intervals(session_name,records,f_name,lapse_limit=500):
+	
+
+	output_filename = session_name+"_lapses_1min.csv"
+
+	intervaled_dict = generate_intervaled_records(records,1,10)
+	
+	with open('output files/'+f_name+" "+output_filename, 'w') as csvfile:
+		fieldnames = ['participant_id', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+		writer = csv.DictWriter(csvfile, fieldnames=fieldnames,lineterminator='\n')
+		writer.writeheader()
+
+		sorted_ids = sorted(intervaled_dict.keys())
+
+		for participant_id in sorted_ids:
+			
+			current_record = intervaled_dict[participant_id]
+			#print(participant_id)
+			#print(current_record)
+			writer.writerow({'participant_id':participant_id, '1': str(get_lapses(current_record[1],lapse_limit)), '2':str(get_lapses(current_record[2],lapse_limit)), '3':str(get_lapses(current_record[3],lapse_limit)), '4':str(get_lapses(current_record[4],lapse_limit)), '5':str(get_lapses(current_record[5],lapse_limit)), '6':str(get_lapses(current_record[6],lapse_limit)), '7':str(get_lapses(current_record[7],lapse_limit)), '8':str(get_lapses(current_record[8],lapse_limit)), '9':str(get_lapses(current_record[9],lapse_limit)), '10':str(get_lapses(current_record[10],lapse_limit))})
+
+
+	print("Output saved as "+output_filename)
+
+def get_lapses(data,lapse_limit):
+	return len([x for x in data if x > lapse_limit])
 
 def calc_slowest_fastest_means(trials,slowest=True):
 
