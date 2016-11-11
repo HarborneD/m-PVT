@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <?php
+	//first check the post values, if not present assign a default
 	//edit the values after the colon to set defaults
 	$practise_trials = isset($_POST['practise_trials']) ? (int)$_POST['practise_trials'] : 3;
 	$max_trials = isset($_POST['max_trials']) ? (int)$_POST['max_trials'] : 53;
 	$test_name = isset($_POST['test_name']) ? (string)$_POST['test_name'] : "Cardiff University - Open Day"; //for the header
 	$test_identifier = isset($_POST['test_identifier']) ? (string)$_POST['test_identifier'] : "open day - date_unspecified"; //for the data
 	$participant_id = isset($_POST['participant_id']) ? (string)$_POST['participant_id'] : ""; //participant id pre type prefix
+
+	//now check the get values and use them instead if present
+	$practise_trials = isset($_GET['practise_trials']) ? (int)$_GET['practise_trials'] : $practise_trials;
+	$max_trials = isset($_GET['max_trials']) ? (int)$_GET['max_trials'] : $max_trials;
+	$test_name = isset($_GET['test_name']) ? (string)$_GET['test_name'] : $test_name; //for the header
+	$test_identifier = isset($_GET['test_identifier']) ? (string)$_GET['test_identifier'] : $test_identifier; //for the data
+	$participant_id = isset($_GET['participant_id']) ? (string)$_GET['participant_id'] : $participant_id; //participant id pre type prefix
 	
 ?>
 <html>
