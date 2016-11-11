@@ -3,8 +3,8 @@
 	//edit the values after the colon to set defaults
 	$practise_trials = isset($_POST['practise_trials']) ? (int)$_POST['practise_trials'] : 3;
 	$max_trials = isset($_POST['max_trials']) ? (int)$_POST['max_trials'] : 53;
-	$test_name = isset($_POST['test_name']) ? (string)$_POST['test_name'] : "Open Day: Friday 1st July 2016"; //for the header
-	$test_identifier = isset($_POST['test_identifier']) ? (string)$_POST['test_identifier'] : "open day 01-07-16"; //for the data
+	$test_name = isset($_POST['test_name']) ? (string)$_POST['test_name'] : "Cardiff University - Open Day"; //for the header
+	$test_identifier = isset($_POST['test_identifier']) ? (string)$_POST['test_identifier'] : "open day - date_unspecified"; //for the data
 	$participant_id = isset($_POST['participant_id']) ? (string)$_POST['participant_id'] : ""; //participant id pre type prefix
 	
 ?>
