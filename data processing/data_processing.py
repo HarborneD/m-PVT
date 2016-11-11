@@ -136,7 +136,7 @@ def choose_session(total_records,session_keys,session_dict,f_name):
 		
 #Choose Output Function:		
 def generate_outputs(session_name,data_list,f_name):
-	output_types = ["5 minute intervals(max 25 minutes)","1 Minute intervals up to 10 minutes","5 minute intervals, slowst and fastest 10%","Number of Lapses: 1 Minute intervals up to 10 minutes"]
+	output_types = ["5 minute intervals(max 25 minutes)","1 Minute intervals up to 10 minutes","5 minute intervals, slowst and fastest 10%","Number of Lapses: 1 Minute intervals up to 10 minutes","Number of Lapses: 5 Minute intervals up to 50 minutes"]
 
 
 	#print(data_list)		
@@ -182,6 +182,9 @@ def generate_outputs(session_name,data_list,f_name):
 
 					elif(format_index == 3):
 						output_lapses_1min_intervals(session_name,data_list,f_name)
+
+					elif(format_index == 4):
+						output_lapses_5min_intervals(session_name,data_list,f_name)
 
 					else:
 						need_input = True
@@ -330,6 +333,28 @@ def output_lapses_1min_intervals(session_name,records,f_name,lapse_limit=500):
 			#print(participant_id)
 			#print(current_record)
 			writer.writerow({'participant_id':participant_id, '1': str(get_lapses(current_record[1],lapse_limit)), '2':str(get_lapses(current_record[2],lapse_limit)), '3':str(get_lapses(current_record[3],lapse_limit)), '4':str(get_lapses(current_record[4],lapse_limit)), '5':str(get_lapses(current_record[5],lapse_limit)), '6':str(get_lapses(current_record[6],lapse_limit)), '7':str(get_lapses(current_record[7],lapse_limit)), '8':str(get_lapses(current_record[8],lapse_limit)), '9':str(get_lapses(current_record[9],lapse_limit)), '10':str(get_lapses(current_record[10],lapse_limit))})
+
+
+def output_lapses_5min_intervals(session_name,records,f_name,lapse_limit=500):
+	
+
+	output_filename = session_name+"_lapses_5min.csv"
+
+	intervaled_dict = generate_intervaled_records(records,5,10)
+	
+	with open('output files/'+f_name+" "+output_filename, 'w') as csvfile:
+		fieldnames = ['participant_id', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50']
+		writer = csv.DictWriter(csvfile, fieldnames=fieldnames,lineterminator='\n')
+		writer.writeheader()
+
+		sorted_ids = sorted(intervaled_dict.keys())
+
+		for participant_id in sorted_ids:
+			
+			current_record = intervaled_dict[participant_id]
+			#print(participant_id)
+			#print(current_record)
+			writer.writerow({'participant_id':participant_id, '5': str(get_lapses(current_record[1],lapse_limit)), '10':str(get_lapses(current_record[2],lapse_limit)), '15':str(get_lapses(current_record[3],lapse_limit)), '20':str(get_lapses(current_record[4],lapse_limit)), '25':str(get_lapses(current_record[5],lapse_limit)), '30':str(get_lapses(current_record[6],lapse_limit)), '35':str(get_lapses(current_record[7],lapse_limit)), '40':str(get_lapses(current_record[8],lapse_limit)), '45':str(get_lapses(current_record[9],lapse_limit)), '50':str(get_lapses(current_record[10],lapse_limit))})
 
 
 	print("Output saved as "+output_filename)

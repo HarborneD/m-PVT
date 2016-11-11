@@ -29,7 +29,7 @@
 	    	<div id="pvt_setup_container">
 	    		<img id="school_banner" src="images/school_banner.jpg"/>
 		    	<!-- <h1>School of Psychology <img id="cardiff_logo" src="images/cardiff_logo.png"/></h1> -->
-		    	<h2>Psychomotor Vigilance Task</h2>
+		    	<h2>Psychomotor Vigilance Task (PVT)</h2>
 		    	<h2><?php echo$test_name; ?></h2>
 				<form class="PVT_form" action="pvt.php" onsubmit="return validate_trial_setup_form()" method="get">
 					<input id="PVT_Max_trials" name="max_trials" type="hidden" value=<?php echo$max_trials; ?>>
@@ -39,17 +39,23 @@
 	                
 	                <div id="PVT_participant_type_container" class="field_outter_container">
 		    			<div class="form_field_container">
-			                <label class="form_field_above_label" for="PVT_participant_type">Particpant Type:</label>
+			                <label class="form_field_above_label" for="PVT_participant_type">Session Type:</label>
 			                <select class="form_field_input" id="PVT_participant_type" >
-			                	<option value="STU_">Student</opetion>
-			                	<option value="PLUS_">Student's Plus One</opetion>
+			                	<option value="LW1_">Low 1</opetion>
+			                	<option value="LW2_">Low 2</opetion>
+			                	<option value="MD1_">Medium 1</opetion>
+			                	<option value="MD2_">Medium 2</opetion>
+			                	<option value="HG1_">High 1</opetion>
+			                	<option value="HG2_">High 2</opetion>
+			                	<option value="OPN_">Open Day</opetion>
+			                	
 			                </select>
 			            </div>
 			        </div>
 
 			        <div id="PVT_participant_id_container" class="field_outter_container">
 		    			<div class="form_field_container">
-			                <label class="form_field_above_label" for="PVT_participant_id_entry">ID: (Ask Coordinator)</label>
+			                <label class="form_field_above_label" for="PVT_participant_id_entry">ID:</label>
 			                <input type="tel" class="form_field_input" id="PVT_participant_id_entry" value=<?php echo'"'.$participant_id.'"';?>/>
 			            </div>
 
