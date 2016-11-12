@@ -12,6 +12,10 @@ function validate_trial_setup_form()
 {
 	var is_valid = true;
 
+	if(!validate_session_type())
+	{
+		is_valid = false;
+	}
 
 	if(!validate_participant_id())
 	{
@@ -28,6 +32,22 @@ function validate_trial_setup_form()
 	return is_valid;
 }
 
+function validate_session_type()
+{
+	var field =  document.getElementById('PVT_participant_type');
+	
+	var entry = field.value;
+
+	var id = field.id;
+	
+	if(entry.length == 0)
+	{
+		update_input_status(id,false,"Required Field!");
+		return false;
+	}
+
+	return true;
+}
 
 function validate_participant_id()
 {

@@ -42,13 +42,15 @@
 				<form class="PVT_form" action="pvt.php" onsubmit="return validate_trial_setup_form()" method="get">
 					<input id="PVT_Max_trials" name="max_trials" type="hidden" value=<?php echo$max_trials; ?>>
 	                <input id="PVT_practise_trials" name="practise_trials" type="hidden" value=<?php echo$practise_trials; ?>>
-	                <input id="PVT_trial_name" name="test_name" type="hidden" value=<?php echo'"'.$test_identifier.'"'; ?>/>
+	                <input id="PVT_trial_name" name="test_name" type="hidden" value=<?php echo'"'.$test_name.'"'; ?>/>
+	                <input id="PVT_test_identifier" name="test_identifier" type="hidden" value=<?php echo'"'.$test_identifier.'"'; ?>/>
 	                <input id="PVT_participant_id" name="participant_id" type="hidden" value=<?php echo'"_'.$participant_id.'"'; ?>/>
 	                
 	                <div id="PVT_participant_type_container" class="field_outter_container">
 		    			<div class="form_field_container">
 			                <label class="form_field_above_label" for="PVT_participant_type">Session Type:</label>
 			                <select class="form_field_input" id="PVT_participant_type" >
+			                	<option value="">Select Session</opetion>
 			                	<option value="LW1_">Low 1</opetion>
 			                	<option value="LW2_">Low 2</opetion>
 			                	<option value="MD1_">Medium 1</opetion>
@@ -59,6 +61,11 @@
 			                	
 			                </select>
 			            </div>
+
+			            <div id="PVT_participant_type_status" class="form_field_status valid_status">
+                                <i id="PVT_participant_type_symbol" class="form_status_symbol fa fa-check-circle-o"></i> 
+                                <span id="PVT_participant_type_msg" class="form_field_msg"></span>
+                        </div>
 			        </div>
 
 			        <div id="PVT_participant_id_container" class="field_outter_container">

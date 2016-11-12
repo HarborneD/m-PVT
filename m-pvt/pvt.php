@@ -4,6 +4,7 @@
 //Edit these values to configure the defaults for the test
 $practise_trials = isset($_GET['practise_trials']) ? (int)$_GET['practise_trials'] : 3;
 $max_trials = isset($_GET['max_trials']) ? (int)$_GET['max_trials'] : 53;
+$test_identifier = isset($_GET['test_identifier']) ? (string)$_GET['test_identifier'] : "";
 $test_name = isset($_GET['test_name']) ? (string)$_GET['test_name'] : "";
 $participant_id = isset($_GET['participant_id']) ? (string)$_GET['participant_id'] : uniqid();
 
@@ -16,7 +17,7 @@ $total_time_string = (string)(round(($max_trials * 5.5)/60));
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PVT Test<?php if($test_name != ""){echo' - '.$test_name;}?></title>
+    <title>PVT Test<?php if($test_identifier != ""){echo' - '.$test_identifier;}?></title>
 
     <link rel="stylesheet" href="css/pvt.css" type="text/css">
     <link rel="stylesheet" href="css/forms.css" type="text/css">
@@ -36,7 +37,7 @@ $total_time_string = (string)(round(($max_trials * 5.5)/60));
                 <input id="PVT_Result_Count" type="hidden" value=0 />
                 <input id="PVT_Early_Click" type="hidden" value=0 />
                 <input id="PVT_early_clicks" type="hidden" value=0 />
-                <input id="PVT_trial_name" type="hidden" value=<?php echo'"'.$test_name.'"'; ?>/>
+                <input id="PVT_trial_name" type="hidden" value=<?php echo'"'.$test_identifier.'"'; ?>/>
                 <input id="PVT_trial_results_string" type="hidden" value="" />
 
                 <div class="PVT_display">
@@ -79,7 +80,8 @@ $total_time_string = (string)(round(($max_trials * 5.5)/60));
                 <div id="PVT_Results_Container">
                     <span id="PVT_average_text">Your Average Reaction Time:</span>
                     <span id="PVT_average_time"></span>
-                    <a href="trial_setup.php"><input id="PVT_quit_button" class="form_submit_button" type="button" value="Quit"></a>
+                    <!-- .'&participant_id='.end(explode('_',$participant_id)) -->
+                    <a href="trial_setup.php?<?php echo'practise_trials='.$practise_trials.'&max_trials='.$max_trials.'&test_name='.$test_name.'&test_identifier='.$test_identifier; ?>"><input id="PVT_quit_button" class="form_submit_button" type="button" value="Quit"></a>
                 </div>
             </div>
 
