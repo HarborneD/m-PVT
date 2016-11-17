@@ -18,10 +18,11 @@
 	<body>
 
 	    <div class="container body-content">
+	   
 	    	<div id="pvt_results_container">
 		    	<h1>School of Psychology <img id="cardiff_logo" src="images/cardiff_logo.png"/></h1>
 		    	<h2>Psychomotor Vigilance Task - Results</h2>
-		    	
+		    	 <a href="download_results.php">Download Results</a>
 				<table>
 					<tr>
 						<th>Id</th>
