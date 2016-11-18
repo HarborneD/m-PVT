@@ -1,20 +1,11 @@
-<?php
+<?php 
     $data = "";
+    
     $con = mysqli_connect("csmysql.cs.cf.ac.uk", "c0919382","xjD2RmSH", "c0919382");
     
     $results_retrieve = "SELECT * FROM PVT_results;";
     
     $results = mysqli_query($con, $results_retrieve);
-
-    $data .= 'Id'.',';
-    $data .= 'Date'.',';
-    $data .= 'Trial Name'.',';
-    $data .= 'Particpant Id'.',';
-    $data .= 'Trial Type'.',';
-    $data .= 'Trial Time in Ms'.',';
-    $data .= 'Early Clicks'.',';
-
-    $data .= "\n";
 
     if (mysqli_num_rows($results) > 0) 
         {
@@ -30,24 +21,25 @@
                 $trial_time = $result_row["trial_time_ms"];
                 $early_clicks = $result_row["early_clicks"];
                 
+                $participant_split = explode("_",$participant_id);
+
+                $data .= $participant_split[0].',';
                 $data .= $id.',';
+                $data .= $participant_split[1].',';
                 $data .= $date.',';
-                $data .= $trial_name.',';
-                $data .= $participant_id.',';
-                $data .= $trial_type.',';
                 $data .= $trial_time.',';
                 $data .= $early_clicks.',';
-               
+                $data .= $trial_type.',';
+                
                 $data .= "\n";
             }
         }
     
     mysqli_close($con);
                         
-    header("Content-type: application/octet-stream");
+    header("Content-type: text/plain",true);
     header("Content-Disposition: attachment; filename=pvt_results.csv");
     header("Pragma: no-cache");
     header("Expires: 0");
-    print "$header$data";
-
-?>
+    ob_end_clean();
+    echo $data;
