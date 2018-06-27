@@ -43,7 +43,8 @@ def select_file():
 
 
 #Load Function:
-def load_file_data(f_name,minimum_ms = 100,maximum_ms = 999):
+def load_file_data(f_name,minimum_ms = 100,maximum_ms = 499):
+	#NOTE MSE - The range includes 100ms - 499ms. Anything from 500 (including 500) is removed! 
 
 	session_dict = {}
 
@@ -64,15 +65,16 @@ def load_file_data(f_name,minimum_ms = 100,maximum_ms = 999):
 		#if the trial name isn't in the session_dict:
 		if(not(record[0] in session_dict)):
 			session_keys[len(session_dict)] = record[0] #add the session name to the key dict with the key = to the length of the session dict	
-			session_dict[record[0]] = [[],0,0,0,0] #add a list in the format [[],0,0,0,0] = (the trial list, the practise counter,the under removals,the over removals,total records pre removal) with key of the session name in the session dict
+			session_dict[record[0]] = [[],0,0,0,0,[]] #add a list in the format [[],0,0,0,0,[]] = (the trial list, the practise counter,the under removals,the over removals,total records pre removal,results including lapses) with key of the session name in the session dict
 		
 		
 		#include record in total count
 		session_dict[record[0]][4] += 1
 
 		keep_result = True
+		lapse_result = False
 		#if the type is practise add to the practise counter in the relevent session tuple
-		if(record[6] == "Practise"):
+		if(record[6] == "Practise" or record[6] == "0"):
 			session_dict[record[0]][1] += 1
 			keep_result = False
 		else:
@@ -84,10 +86,15 @@ def load_file_data(f_name,minimum_ms = 100,maximum_ms = 999):
 			if(int(record[4]) > maximum_ms):
 				session_dict[record[0]][3] += 1
 				keep_result = False
+				lapse_result = True
 
 		#if it is add the record to the session list in the session_dict
 		if(keep_result):
 			session_dict[record[0]][0].append(record)
+
+		if(keep_result or lapse_result):
+			session_dict[record[0]][5].append(record)
+
 
 	return file_total_records,session_keys,session_dict
 
@@ -130,13 +137,13 @@ def choose_session(total_records,session_keys,session_dict,f_name):
 				if(session_index < len(session_keys) and session_index >= 0):
 					need_input = False
 					session_name = session_keys[session_index]
-					more_session = generate_outputs(session_name,session_dict[session_name][0],f_name)
+					more_session = generate_outputs(session_name,session_dict[session_name][0],f_name,session_dict[session_name][5])
 				else:	
 					print("Number entered is out of valid range") 
 		
 #Choose Output Function:		
-def generate_outputs(session_name,data_list,f_name):
-	output_types = ["5 minute intervals(max 25 minutes)","1 Minute intervals up to 10 minutes","5 minute intervals, slowst and fastest 10%","Number of Lapses: 1 Minute intervals up to 10 minutes","Number of Lapses: 5 Minute intervals up to 50 minutes"]
+def generate_outputs(session_name,data_list,f_name,data_inc_lapses):
+	output_types = ["5 minute intervals(max 25 minutes)","1 Minute intervals up to 10 minutes","5 minute intervals, slowst and fastest 10%","Number of Lapses: 1 Minute intervals up to 10 minutes","1 Minute intervals up to 25 minutes","Number of Lapses: 1 Minute intervals up to 25 minutes"]
 
 
 	#print(data_list)		
@@ -181,11 +188,14 @@ def generate_outputs(session_name,data_list,f_name):
 						output_percentage_5min_intervals(session_name,data_list,f_name)
 
 					elif(format_index == 3):
-						output_lapses_1min_intervals(session_name,data_list,f_name)
+						output_lapses_1min_intervals(session_name,data_inc_lapses,f_name,lapse_limit=500)
 
 					elif(format_index == 4):
-						output_lapses_5min_intervals(session_name,data_list,f_name)
-
+						output_1min_intervals_over_25mins(session_name,data_list,f_name)
+					
+					elif(format_index == 5):
+						output_lapses_1min_intervals_over_25mins(session_name,data_inc_lapses,f_name,lapse_limit=500)
+					
 					else:
 						need_input = True
 						print("Number entered is out of valid range") 
@@ -274,6 +284,7 @@ def output_1min_intervals(session_name,records,f_name):
 	
 	with open('output files/'+f_name+" "+output_filename, 'w') as csvfile:
 		fieldnames = ['participant_id', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+		
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames,lineterminator='\n')
 		writer.writeheader()
 
@@ -289,6 +300,38 @@ def output_1min_intervals(session_name,records,f_name):
 
 	print("Output saved as "+output_filename)
 
+
+def output_1min_intervals_over_25mins(session_name,records,f_name):
+	
+	output_filename = session_name+"_1min_over25min.csv"
+
+	intervaled_dict = generate_intervaled_records(records,1,25)
+	
+	with open('output files/'+f_name+" "+output_filename, 'w') as csvfile:
+		fieldnames = ['participant_id']
+
+		fieldnames += [str(i) for i in range(1,26)]
+		
+		writer = csv.DictWriter(csvfile, fieldnames=fieldnames,lineterminator='\n')
+		writer.writeheader()
+
+		sorted_ids = sorted(intervaled_dict.keys())
+
+		for participant_id in sorted_ids:
+			
+			current_record = intervaled_dict[participant_id]
+			#print(participant_id)
+			#print(current_record)
+			row_dict = {'participant_id':participant_id}
+
+			for i in range(1,26):
+
+				if(len(current_record[i])):
+					row_dict[str(i)] = str(mean(current_record[i]))
+				else:
+					row_dict[str(i)] = "0"
+
+			writer.writerow(row_dict)
 
 def output_percentage_5min_intervals(session_name,records,f_name):
 	output_filename = session_name+"_percentages.csv"
@@ -314,14 +357,17 @@ def output_percentage_5min_intervals(session_name,records,f_name):
 
 
 def output_lapses_1min_intervals(session_name,records,f_name,lapse_limit=500):
+	#NOTE MSE - Anything from 501 is removed! 
 	
 
 	output_filename = session_name+"_lapses_1min.csv"
 
 	intervaled_dict = generate_intervaled_records(records,1,10)
 	
+	
 	with open('output files/'+f_name+" "+output_filename, 'w') as csvfile:
 		fieldnames = ['participant_id', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames,lineterminator='\n')
 		writer.writeheader()
 
@@ -332,18 +378,23 @@ def output_lapses_1min_intervals(session_name,records,f_name,lapse_limit=500):
 			current_record = intervaled_dict[participant_id]
 			#print(participant_id)
 			#print(current_record)
+			print(current_record[1])
 			writer.writerow({'participant_id':participant_id, '1': str(get_lapses(current_record[1],lapse_limit)), '2':str(get_lapses(current_record[2],lapse_limit)), '3':str(get_lapses(current_record[3],lapse_limit)), '4':str(get_lapses(current_record[4],lapse_limit)), '5':str(get_lapses(current_record[5],lapse_limit)), '6':str(get_lapses(current_record[6],lapse_limit)), '7':str(get_lapses(current_record[7],lapse_limit)), '8':str(get_lapses(current_record[8],lapse_limit)), '9':str(get_lapses(current_record[9],lapse_limit)), '10':str(get_lapses(current_record[10],lapse_limit))})
 
-
-def output_lapses_5min_intervals(session_name,records,f_name,lapse_limit=500):
+def output_lapses_1min_intervals_over_25mins(session_name,records,f_name,lapse_limit=500):
+	#NOTE MSE - Anything from 501 is removed! 
 	
 
-	output_filename = session_name+"_lapses_5min.csv"
+	output_filename = session_name+"_lapses_1min_over_25mins.csv"
 
-	intervaled_dict = generate_intervaled_records(records,5,10)
+	intervaled_dict = generate_intervaled_records(records,1,25)
+	
 	
 	with open('output files/'+f_name+" "+output_filename, 'w') as csvfile:
-		fieldnames = ['participant_id', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50']
+		fieldnames = ['participant_id']
+
+		fieldnames += [str(i) for i in range(1,26)]
+		
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames,lineterminator='\n')
 		writer.writeheader()
 
@@ -352,10 +403,17 @@ def output_lapses_5min_intervals(session_name,records,f_name,lapse_limit=500):
 		for participant_id in sorted_ids:
 			
 			current_record = intervaled_dict[participant_id]
-			#print(participant_id)
-			#print(current_record)
-			writer.writerow({'participant_id':participant_id, '5': str(get_lapses(current_record[1],lapse_limit)), '10':str(get_lapses(current_record[2],lapse_limit)), '15':str(get_lapses(current_record[3],lapse_limit)), '20':str(get_lapses(current_record[4],lapse_limit)), '25':str(get_lapses(current_record[5],lapse_limit)), '30':str(get_lapses(current_record[6],lapse_limit)), '35':str(get_lapses(current_record[7],lapse_limit)), '40':str(get_lapses(current_record[8],lapse_limit)), '45':str(get_lapses(current_record[9],lapse_limit)), '50':str(get_lapses(current_record[10],lapse_limit))})
 
+			row_dict = {'participant_id':participant_id}
+
+			for i in range(1,26):
+
+				if(len(current_record[i])):
+					row_dict[str(i)] = str(get_lapses(current_record[i],lapse_limit))
+				else:
+					row_dict[str(i)] = "0"
+
+			writer.writerow(row_dict)
 
 	print("Output saved as "+output_filename)
 
