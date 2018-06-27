@@ -188,13 +188,13 @@ def generate_outputs(session_name,data_list,f_name,data_inc_lapses):
 						output_percentage_5min_intervals(session_name,data_list,f_name)
 
 					elif(format_index == 3):
-						output_lapses_1min_intervals(session_name,data_inc_lapses,f_name,lapse_limit=500)
+						output_lapses_1min_intervals(session_name,data_inc_lapses,f_name,lapse_limit=499)
 
 					elif(format_index == 4):
 						output_1min_intervals_over_25mins(session_name,data_list,f_name)
 					
 					elif(format_index == 5):
-						output_lapses_1min_intervals_over_25mins(session_name,data_inc_lapses,f_name,lapse_limit=500)
+						output_lapses_1min_intervals_over_25mins(session_name,data_inc_lapses,f_name,lapse_limit=499)
 					
 					else:
 						need_input = True
@@ -356,7 +356,7 @@ def output_percentage_5min_intervals(session_name,records,f_name):
 	print("Output saved as "+output_filename)
 
 
-def output_lapses_1min_intervals(session_name,records,f_name,lapse_limit=500):
+def output_lapses_1min_intervals(session_name,records,f_name,lapse_limit=499):
 	#NOTE MSE - Anything from 501 is removed! 
 	
 
@@ -381,7 +381,7 @@ def output_lapses_1min_intervals(session_name,records,f_name,lapse_limit=500):
 			print(current_record[1])
 			writer.writerow({'participant_id':participant_id, '1': str(get_lapses(current_record[1],lapse_limit)), '2':str(get_lapses(current_record[2],lapse_limit)), '3':str(get_lapses(current_record[3],lapse_limit)), '4':str(get_lapses(current_record[4],lapse_limit)), '5':str(get_lapses(current_record[5],lapse_limit)), '6':str(get_lapses(current_record[6],lapse_limit)), '7':str(get_lapses(current_record[7],lapse_limit)), '8':str(get_lapses(current_record[8],lapse_limit)), '9':str(get_lapses(current_record[9],lapse_limit)), '10':str(get_lapses(current_record[10],lapse_limit))})
 
-def output_lapses_1min_intervals_over_25mins(session_name,records,f_name,lapse_limit=500):
+def output_lapses_1min_intervals_over_25mins(session_name,records,f_name,lapse_limit=499):
 	#NOTE MSE - Anything from 501 is removed! 
 	
 
