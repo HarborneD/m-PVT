@@ -143,7 +143,7 @@ def choose_session(total_records,session_keys,session_dict,f_name):
 		
 #Choose Output Function:		
 def generate_outputs(session_name,data_list,f_name,data_inc_lapses):
-	output_types = ["5 minute intervals(max 25 minutes)","1 Minute intervals up to 10 minutes","5 minute intervals, slowst and fastest 10%","Number of Lapses: 1 Minute intervals up to 10 minutes","1 Minute intervals up to 25 minutes","Number of Lapses: 1 Minute intervals up to 25 minutes"]
+	output_types = ["5 minute intervals(max 25 minutes)","1 Minute intervals up to 10 minutes","5 minute intervals, slowst and fastest 10%","Number of Lapses: 1 Minute intervals up to 10 minutes","1 Minute intervals up to 25 minutes","Number of Lapses: 1 Minute intervals up to 25 minutes","Number of Lapses: 5 Minute intervals up to 25 minutes"]
 
 
 	#print(data_list)		
@@ -195,6 +195,9 @@ def generate_outputs(session_name,data_list,f_name,data_inc_lapses):
 					
 					elif(format_index == 5):
 						output_lapses_1min_intervals_over_25mins(session_name,data_inc_lapses,f_name,lapse_limit=499)
+					
+					elif(format_index == 6):
+						output_lapses_5min_intervals_over_25mins(session_name,data_inc_lapses,f_name,lapse_limit=499)
 					
 					else:
 						need_input = True
@@ -382,7 +385,6 @@ def output_lapses_1min_intervals(session_name,records,f_name,lapse_limit=499):
 			writer.writerow({'participant_id':participant_id, '1': str(get_lapses(current_record[1],lapse_limit)), '2':str(get_lapses(current_record[2],lapse_limit)), '3':str(get_lapses(current_record[3],lapse_limit)), '4':str(get_lapses(current_record[4],lapse_limit)), '5':str(get_lapses(current_record[5],lapse_limit)), '6':str(get_lapses(current_record[6],lapse_limit)), '7':str(get_lapses(current_record[7],lapse_limit)), '8':str(get_lapses(current_record[8],lapse_limit)), '9':str(get_lapses(current_record[9],lapse_limit)), '10':str(get_lapses(current_record[10],lapse_limit))})
 
 def output_lapses_1min_intervals_over_25mins(session_name,records,f_name,lapse_limit=499):
-	#NOTE MSE - Anything from 501 is removed! 
 	
 
 	output_filename = session_name+"_lapses_1min_over_25mins.csv"
@@ -416,6 +418,40 @@ def output_lapses_1min_intervals_over_25mins(session_name,records,f_name,lapse_l
 			writer.writerow(row_dict)
 
 	print("Output saved as "+output_filename)
+
+
+def output_lapses_5min_intervals_over_25mins(session_name,records,f_name,lapse_limit=499):
+	output_filename = session_name+"_lapses_5min_over_25mins.csv"
+
+	intervaled_dict = generate_intervaled_records(records,5,5)
+	
+	with open('output files/'+f_name+" "+output_filename, 'w') as csvfile:
+		fieldnames = ['participant_id']
+
+		fieldnames += [str(i) for i in range(5,26,5)]
+		
+		writer = csv.DictWriter(csvfile, fieldnames=fieldnames,lineterminator='\n')
+		writer.writeheader()
+
+		sorted_ids = sorted(intervaled_dict.keys())
+
+		for participant_id in sorted_ids:
+			
+			current_record = intervaled_dict[participant_id]
+
+			row_dict = {'participant_id':participant_id}
+
+			for i in range(1,6):
+
+				if(len(current_record[i])):
+					row_dict[str(i*5)] = str(get_lapses(current_record[i],lapse_limit))
+				else:
+					row_dict[str(i*5)] = "0"
+
+			writer.writerow(row_dict)
+
+	print("Output saved as "+output_filename)
+
 
 def get_lapses(data,lapse_limit):
 	return len([x for x in data if x > lapse_limit])
